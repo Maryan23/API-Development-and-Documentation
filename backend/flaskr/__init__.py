@@ -58,6 +58,8 @@ def create_app(test_config=None):
 
     @app.route('/questions', methods=['GET'])
     def get_questions():
+        categories = Category.query.all()
+        categories_list = [category.type for category in categories]
         page = request.args.get('page', 1, type=int)
         questions = Question.query.order_by(Question.id).paginate(page, QUESTIONS_PER_PAGE, False)
         questions_list = [question.format() for question in questions.items]
@@ -68,7 +70,7 @@ def create_app(test_config=None):
             'questions': questions_list,
             'total_questions': questions.total,
             'current_category': None,
-            'categories': Category.query.all()
+            'categories': categories_list,
         })
 
     """
@@ -99,7 +101,7 @@ def create_app(test_config=None):
     the form will clear and the question will appear at the end of the last page
     of the questions list in the "List" tab.
     """
-    @app.route('/questions', methods=['POST'])
+    @app.route('/question', methods=['POST'])
     def create_question():
         body = request.get_json()
         new_question = body.get('question')
@@ -206,6 +208,7 @@ def create_app(test_config=None):
             'error': 404,
             'message': 'Not found'
         }), 404
+    
 
     return app
 
