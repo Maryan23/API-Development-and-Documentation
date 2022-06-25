@@ -146,13 +146,12 @@ class QuestionView extends Component {
                 onClick={() => {
                   this.getByCategory(category.id);
                 }}
-              > 
+              ><button class='buttono'>
                 {category.type}
                 <img
                   className='category'
-                  alt={`${category.type}`}
-                  src={`${category.type}.svg`}
                 />
+                </button>
               </li>
             ))}
           </ul>

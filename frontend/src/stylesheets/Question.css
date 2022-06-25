@@ -1,11 +1,16 @@
 .question-view {
   display: flex;
   flex-direction: row;
+  border-style: dashed;
+  padding-right: 10%;
+  background-color: rgb(195, 221, 234);
 }
 
 .categories-list {
-  flex-basis: 25%;
+  flex-basis: 50%;
   flex-shrink: 2;
+  padding-left: 0.2%;
+  border-radius: 50%;
 }
 
 .categories-list > form {
@@ -13,17 +18,30 @@
 }
 
 .questions-list {
-  flex-basis: 75%;
+  flex-basis: 50%;
   text-align: center;
 }
 
 .Question-holder {
   padding: 10px 20px;
   border: 2px black solid;
-  text-align: left;
+  border-radius: 1.5%;
+  text-align: center;
   margin: 7px;
 }
-
+.buttono{
+  background-color:dodgerblue;
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  margin-left: 40%;
+}
 .Question-status {
   display: flex;
   flex-direction: row;
