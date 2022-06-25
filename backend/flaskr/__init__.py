@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 import random
 from models import setup_db, Question, Category
 
@@ -113,7 +114,7 @@ def create_app(test_config=None):
             'current_category': None
         })
 
-    @app.route("/categories/<string:category_id>/questions")
+    @app.route("/categories/<int:category_id>/questions")
     def get_questions_by_category(category_id):
         questions = Question.query.filter(Question.category == category_id).all()
         questions_list = [question.format() for question in questions]

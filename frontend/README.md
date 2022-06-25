@@ -86,7 +86,7 @@ You can optionally update this game play to increase the number of questions or 
 
 ---
 
-`GET '/questions?page=${integer}'`
+`GET '/questions '`
 
 - Fetches a paginated set of questions, a total number of questions, all categories and current category string.
 - Request Arguments: `page` - integer
@@ -97,13 +97,13 @@ You can optionally update this game play to increase the number of questions or 
   "questions": [
     {
       "id": 1,
-      "question": "This is a question",
-      "answer": "This is an answer",
+      "question": "This is the question",
+      "answer": "This is it's answer",
       "difficulty": 5,
       "category": 2
     }
   ],
-  "totalQuestions": 100,
+  "totalQuestions": 10,
   "categories": {
     "1": "Science",
     "2": "Art",
@@ -112,17 +112,49 @@ You can optionally update this game play to increase the number of questions or 
     "5": "Entertainment",
     "6": "Sports"
   },
-  "currentCategory": "History"
+  "currentCategory": "any"
+}
+```
+---
+
+`DELETE '/questions/${id}'`
+
+- Deletes a specified question using the id of the question
+- Request Arguments: `id` - integer
+- Returns the appropriate HTTP status code.
+
+---
+---
+
+`POST '/postquestions'`
+
+- Sends a post request that adds a new question
+- Request arguments - None
+- Body:
+
+```json
+{
+  "question": "New question string",
+  "answer": "New answer string",
+  "difficulty": 1,
+  "category": 3
 }
 ```
 
+- Returns: Doesn't return new data
+
 ---
 
-`GET '/categories/${id}/questions'`
+`POST '/questions'`
 
-- Fetches questions for a cateogry specified by id request argument
-- Request Arguments: `id` - integer
-- Returns: An object with questions for the specified category, total questions, and current category string
+- Sends a post request to search for a specific question by search term
+- Request Body:
+```json
+{
+  "searchTerm": "term searched for by user"
+}
+```
+- Returns: an array of questions,total number of questions that met the search term and the current category
 
 ```json
 {
@@ -132,24 +164,30 @@ You can optionally update this game play to increase the number of questions or 
       "question": "This is a question",
       "answer": "This is an answer",
       "difficulty": 5,
-      "category": 4
+      "category": 5
     }
   ],
-  "totalQuestions": 100,
-  "currentCategory": "History"
+  "totalQuestions": 50,
+  "currentCategory": "any"
 }
 ```
-
 ---
+`GET '/categories/${id}/questions'`
+- Fetches questions of a specific category
+- Request Arguments: 'category_id'
+- Request Body - Filters questions according    to  category 
+- Returns: An object with questions, total questions and current category string
 
-`DELETE '/questions/${id}'`
-
-- Deletes a specified question using the id of the question
-- Request Arguments: `id` - integer
-- Returns: Does not need to return anything besides the appropriate HTTP status code. Optionally can return the id of the question. If you are able to modify the frontend, you can have it remove the question using the id instead of refetching the questions.
-
----
-
+```json
+{
+  "questions": {
+    "id": 1,
+    "questions": "questions_list",
+    "total_questions": "len(questions_list)",
+    "category": "category_id",
+  }
+}
+```
 `POST '/quizzes'`
 
 - Sends a post request in order to get the next question
@@ -157,11 +195,12 @@ You can optionally update this game play to increase the number of questions or 
 
 ```json
 {
-    'previous_questions': [1, 4, 20, 15]
-    quiz_category': 'current category'
+    "quizzes":{
+      "previous_questions": [1,7,8],
+      "quiz_category" : "current category"
+      }
  }
 ```
-
 - Returns: a single new question object
 
 ```json
@@ -176,51 +215,4 @@ You can optionally update this game play to increase the number of questions or 
 }
 ```
 
----
 
-`POST '/questions'`
-
-- Sends a post request in order to add a new question
-- Request Body:
-
-```json
-{
-  "question": "Heres a new question string",
-  "answer": "Heres a new answer string",
-  "difficulty": 1,
-  "category": 3
-}
-```
-
-- Returns: Does not return any new data
-
----
-
-`POST '/questions'`
-
-- Sends a post request in order to search for a specific question by search term
-- Request Body:
-
-```json
-{
-  "searchTerm": "this is the term the user is looking for"
-}
-```
-
-- Returns: any array of questions, a number of totalQuestions that met the search term and the current category string
-
-```json
-{
-  "questions": [
-    {
-      "id": 1,
-      "question": "This is a question",
-      "answer": "This is an answer",
-      "difficulty": 5,
-      "category": 5
-    }
-  ],
-  "totalQuestions": 100,
-  "currentCategory": "Entertainment"
-}
-```
