@@ -128,40 +128,25 @@ def create_app(test_config=None):
         })
 
     @app.route("/quizzes", methods=["POST"])
-    def get_question():
+    def get_quiz_question():
         body = request.get_json()
-        previous_questions = body.get("previous_questions")
-        quiz_category = body.get("quiz_category")
-        if quiz_category['type'] == 'click':
-            questions = Question.query.order_by('id').all()
-            category = Category.query.filter_by(id = '1').first()
+        previous_questions = body.get('previous_questions')
+        category = body.get('quiz_category')
+        if category['id'] == 0:
+            questions = Question.query.all()
         else:
-            questions = Question.query.filter(Question.category == quiz_category['type']).all()
-            category = Category.query.filter_by(id = quiz_category['type']).first()
-        if questions == []:
+            questions = Question.query.filter(Question.category == category['id']).all()
+        quiz_questions = []
+        for question in questions:
+            if question.id not in previous_questions:
+                quiz_questions.append(question)
+        if len(quiz_questions) == 0:
             abort(404)
-        try:
-            filter_questions = []
-            if len(previous_questions) == 0:
-                filter_questions = questions
-            for p in previous_questions:
-                filter_questions = filter(lambda a: a.id != p, questions)
-                questions = list(filter_questions)
-            selection = [question.format() for question in questions]
-            if len(selection) != 0: 
-                random_selection = random.randrange(len(selection))
-                selection = selection[random_selection]
-            else:
-                selection = []
-            return jsonify({
-                "success": True,
-                "question": selection,
-                "currentCategory": category.type
-            })
-
-        except:
-            abort(422)
-
+        random_question = random.choice(quiz_questions)
+        return jsonify({
+            'success': True,
+            'question': random_question.format()
+        })
     @app.errorhandler(404)
     def fourOwfour(error):
         return (
