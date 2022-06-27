@@ -7,28 +7,23 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-def paginate_questions(request, selection):
-        page = request.args.get("page", 1, type=int)
-        start = (page - 1) * QUESTIONS_PER_PAGE
-        end = start + QUESTIONS_PER_PAGE
 
-        questions = [question.format() for question in selection]
-        current_questions = questions[start:end]
-        return current_questions
+def paginate_questions(request, selection):
+    page = request.args.get("page", 1, type=int)
+    start = (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
+
+    questions = [question.format() for question in selection]
+    current_questions = questions[start:end]
+    return current_questions
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
     setup_db(app)
-
-    """
-    @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
-    """
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    """
-    @TODO: Use the after_request decorator to set Access-Control-Allow
-    """
+
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
@@ -42,7 +37,7 @@ def create_app(test_config=None):
         if len(categories_list) == 0:
             abort(404)
         return jsonify({
-                "success": True,
+                "success": True ,
                 "categories": categories_list
             })
 
@@ -54,10 +49,10 @@ def create_app(test_config=None):
         if len(questions) == 0:
             abort(404)
         return jsonify({
-                "success": True,
-                "questions": questions,
-                "total_questions": len(Question.query.all()),
-                "categories":  [category.format() for category in categories],
+                "success": True  ,
+                "questions": questions ,
+                "total_questions": len(Question.query.all()) ,
+                "categories":  [category.format() for category in categories] ,
                 "currentCategory": any(category.format() for category in categories)
             })
 
@@ -95,6 +90,7 @@ def create_app(test_config=None):
                 "currentCategory": any(category.format() for category in categories)
                 })
         except:
+            question is None
             abort(422)
 
     @app.route("/questions/search", methods=["POST"])
@@ -131,6 +127,10 @@ def create_app(test_config=None):
     def get_quiz_question():
         body = request.get_json()
         previous_questions = body.get('previous_questions')
+        if previous_questions in body:
+            pass
+        else:
+            abort(400)
         category = body.get('quiz_category')
         if category['id'] == 0:
             questions = Question.query.all()
@@ -150,9 +150,10 @@ def create_app(test_config=None):
     @app.errorhandler(404)
     def fourOwfour(error):
         return (
-            jsonify({"success": False, 
-                    "error": 404, 
-                    "message": "Requested resource not found"}), 404,)
+            jsonify({
+                "success": False,
+                "error": 404, 
+                "message": "Requested resource not found"}), 404)
 
     @app.errorhandler(422)
     def process_failed(error):
@@ -175,7 +176,7 @@ def create_app(test_config=None):
             "success": False, 
             "error": 405, 
             "message": "Method not allowed"}),405
-        
+
     @app.errorhandler(500)
     def server_error(error):
         return jsonify({
@@ -183,5 +184,4 @@ def create_app(test_config=None):
             "error": 500, 
             "message": "Internal server error"}),500
 
-        
     return app
